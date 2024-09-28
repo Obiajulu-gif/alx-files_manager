@@ -1,17 +1,22 @@
 import { createClient } from "redis";
 import { promisify } from "util";
-
+/**
+ * Represents a Redis client.
+ */
 class RedisClient {
 	constructor() {
-		this.client = createClient({
-			url: "redis://localhost:6379", // Add the correct Redis server URL
-		});
-		this.client.on("error", (err) => console.error("Redis Client Error:", err));
+		this.client = createClient();
 		this.isClientConnected = true;
-		// Promisifying Redis commands for async/await usage
-		this.getAsync = promisify(this.client.get).bind(this.client);
-		this.setAsync = promisify(this.client.set).bind(this.client);
-		this.delAsync = promisify(this.client.del).bind(this.client);
+		this.client.on("error", (err) => {
+			console.error(
+				"Redis client failed to connect:",
+				err.message || err.toString()
+			);
+			this.isClientConnected = false;
+		});
+		this.client.on("connect", () => {
+			this.isClientConnected = true;
+		});
 	}
 
 	isAlive() {
