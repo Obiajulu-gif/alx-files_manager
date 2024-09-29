@@ -1,12 +1,13 @@
-const express = require('express');
-const AppController = require('../controllers/AppController');
+import express from "express";
+import AppController from "../controllers/AppController.js";
+
+console.log(AppController.getStatus); // Check if this logs a function
+console.log(AppController.getStats); // Check if this logs a function
 
 const router = express.Router();
 
-// Route for checking the status of Redis and DB
-router.get('/status', AppController.getStatus);
+// Define routes
+router.get("/status", AppController.getStatus);
+router.get("/stats", AppController.getStats);
 
-// Route for getting statistics (number of users and files)
-router.get('/stats', AppController.getStats);
-
-module.exports = router;
+export default router;
